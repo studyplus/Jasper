@@ -19,6 +19,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import jp.studyplus.android.app.jasper.BottomNavigationView
+import jp.studyplus.android.app.jasper.CircleGaugeView
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,5 +34,7 @@ class MainActivity : AppCompatActivity() {
         nav.onNavigationItemReselectedListener = {
 
         }
+
+        val sampleView= findViewById<CircleGaugeView>(R.id.circle_gauge_view)
     }
 }
