@@ -18,6 +18,8 @@ package jp.studyplus.android.app.jasper
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.os.Parcel
+import android.os.Parcelable
 import android.support.annotation.DrawableRes
 import android.support.annotation.IdRes
 import android.support.v7.content.res.AppCompatResources
@@ -247,5 +249,47 @@ class BottomNavigationView
         private val LAYOUT_PARAMS = FrameLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
         )
+    }
+
+    override fun onSaveInstanceState(): Parcelable? {
+        val parent = super.onSaveInstanceState() as Parcelable
+        val saved = SavedState(parent)
+        saved.selectedItemId = getSelectedItemId()
+        return saved
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable) {
+        val saved = state as SavedState
+        super.onRestoreInstanceState(saved.superState)
+        setSelectedItemId(saved.selectedItemId)
+    }
+
+    private class SavedState : BaseSavedState {
+        var selectedItemId: Int = -1
+
+        constructor(source: Parcel) : super(source) {
+            selectedItemId = source.readInt()
+        }
+
+        constructor(superState: Parcelable) : super(superState)
+
+        override fun writeToParcel(out: Parcel, flags: Int) {
+            super.writeToParcel(out, flags)
+            out.writeInt(selectedItemId)
+        }
+
+        companion object {
+            @JvmField
+            val CREATOR: Parcelable.Creator<SavedState> = object : Parcelable.Creator<SavedState> {
+
+                override fun createFromParcel(source: Parcel): SavedState {
+                    return SavedState(source)
+                }
+
+                override fun newArray(size: Int): Array<SavedState?> {
+                    return arrayOfNulls(size)
+                }
+            }
+        }
     }
 }
