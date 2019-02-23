@@ -27,15 +27,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val nav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-        nav.setOnNavigationItemSelectedListener(object : BottomNavigationView.OnNavigationItemSelectedListener {
-            override fun onNavigationItemSelected(item: MenuItem): Boolean {
-                return true
-            }
-        })
-        nav.setOnNavigationItemReselectedListener(object : BottomNavigationView.OnNavigationItemReselectedListener {
-            override fun onNavigationItemReselected(item: MenuItem) {
-                return
-            }
-        })
+        nav.onNavigationItemSelectedListener = {
+            true
+        }
+        nav.onNavigationItemReselectedListener = {
+
+        }
     }
 }

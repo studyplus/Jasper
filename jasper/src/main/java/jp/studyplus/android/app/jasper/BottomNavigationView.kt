@@ -37,20 +37,116 @@ class BottomNavigationView
 @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
     FrameLayout(context, attrs, defStyleAttr) {
 
-    private val menu: MenuImpl = MenuImpl(context) {
-        if (reselectedListener == null || it.itemId != getSelectedItemId()) {
-            return@MenuImpl selectedListener?.onNavigationItemSelected(it) ?: false
+    val menu: MenuImpl = MenuImpl(context) {
+        if (onNavigationItemReselectedListener == null || it.itemId != selectedItemId) {
+            return@MenuImpl onNavigationItemSelectedListener?.invoke(it) ?: false
         }
 
         // item is already selected
-        reselectedListener?.onNavigationItemReselected(it)
+        onNavigationItemReselectedListener?.invoke(it)
         return@MenuImpl true
 
     }
+    // region menu view
     private val menuView: MenuView = MenuView(context = context, menu = menu)
 
-    private var selectedListener: OnNavigationItemSelectedListener? = null
-    private var reselectedListener: OnNavigationItemReselectedListener? = null
+    var itemIconTintList
+        /**
+         * Returns the tint which is applied to our menu items' icons.
+         *
+         * @see setItemIconTintList
+         * @attr ref R.styleable#BottomNavigationView_itemIconTint
+         */
+        get() = menuView.iconTintList
+        /**
+         * Set the tint which is applied to our menu items' icons.
+         *
+         * @param tint the tint to apply.
+         *
+         * @attr ref R.styleable#BottomNavigationView_itemIconTint
+         */
+        set(value) {
+            menuView.iconTintList = value
+        }
+
+    var itemTextColor
+        /**
+         * Returns colors used for the different states (normal, selected, focused, etc.) of the menu
+         * item text.
+         *
+         * @see setItemTextColor
+         * @return the ColorStateList of colors used for the different states of the menu items text.
+         *
+         * @attr ref R.styleable#BottomNavigationView_itemTextColor
+         */
+        get() = menuView.itemTextColor
+        /**
+         * Set the colors to use for the different states (normal, selected, focused, etc.) of the menu
+         * item text.
+         *
+         * @see getItemTextColor
+         * @attr ref R.styleable#BottomNavigationView_itemTextColor
+         */
+        set(value) {
+            menuView.itemTextColor = value
+        }
+
+    var itemBackgroundResource
+        /**
+         * Returns the background resource of the menu items.
+         *
+         * @see setItemBackgroundResource
+         * @attr ref R.styleable#BottomNavigationView_itemBackground
+         */
+        @DrawableRes
+        get() = menuView.itemBackgroundRes
+        /**
+         * Set the background of our menu items to the given resource.
+         *
+         * @param resId The identifier of the resource.
+         *
+         * @attr ref R.styleable#BottomNavigationView_itemBackground
+         */
+        set(@DrawableRes value) {
+            menuView.itemBackgroundRes = value
+        }
+
+    var selectedItemId
+        /**
+         * Returns the currently selected menu item ID, or zero if there is no menu.
+         *
+         * @see setSelectedItemId
+         */
+        @IdRes
+        get() = menuView.selectedItemId
+        /**
+         * Set the selected menu item ID. This behaves the same as tapping on an item.
+         *
+         * @param itemId The menu item ID. If no item has this ID, the current selection is unchanged.
+         *
+         * @see getSelectedItemId
+         */
+        set(@IdRes value) {
+            menu.performIdentifierAction(value, 0)
+        }
+    // endregion
+
+    /**
+     * Called when an item in the bottom navigation menu is selected.
+     *
+     * @param item The selected item
+     *
+     * @return true to display the item as the selected item and false if the item should not
+     * be selected. Consider setting non-selectable items as disabled preemptively to
+     * make them appear non-interactive.
+     */
+    var onNavigationItemSelectedListener: ((item: MenuItem) -> Boolean)? = null
+    /**
+     * Called when the currently selected item in the bottom navigation menu is selected again.
+     *
+     * @param item The selected item
+     */
+    var onNavigationItemReselectedListener: ((item: MenuItem) -> Unit)? = null
 
     init {
         context.obtainStyledAttributes(attrs, R.styleable.BottomNavigationView, 0, 0).run {
@@ -82,149 +178,6 @@ class BottomNavigationView
         addView(menuView, LAYOUT_PARAMS)
     }
 
-    /**
-     * Set a listener that will be notified when a bottom navigation item is selected. This listener
-     * will also be notified when the currently selected item is reselected, unless an
-     * [OnNavigationItemReselectedListener] has also been set.
-     *
-     * @param listener The listener to notify
-     *
-     * @see setOnNavigationItemReselectedListener
-     */
-    fun setOnNavigationItemSelectedListener(listener: OnNavigationItemSelectedListener?) {
-        selectedListener = listener
-    }
-
-    /**
-     * Set a listener that will be notified when the currently selected bottom navigation item is
-     * reselected. This does not require an [OnNavigationItemSelectedListener] to be set.
-     *
-     * @param listener The listener to notify
-     *
-     * @see setOnNavigationItemSelectedListener
-     */
-    fun setOnNavigationItemReselectedListener(listener: OnNavigationItemReselectedListener?) {
-        reselectedListener = listener
-    }
-
-    /**
-     * Returns the tint which is applied to our menu items' icons.
-     *
-     * @see setItemIconTintList
-     * @attr ref R.styleable#BottomNavigationView_itemIconTint
-     */
-    fun getItemIconTintList(): ColorStateList? {
-        return menuView.iconTintList
-    }
-
-    /**
-     * Set the tint which is applied to our menu items' icons.
-     *
-     * @param tint the tint to apply.
-     *
-     * @attr ref R.styleable#BottomNavigationView_itemIconTint
-     */
-    fun setItemIconTintList(tint: ColorStateList?) {
-        menuView.iconTintList = tint
-    }
-
-    /**
-     * Returns colors used for the different states (normal, selected, focused, etc.) of the menu
-     * item text.
-     *
-     * @see setItemTextColor
-     * @return the ColorStateList of colors used for the different states of the menu items text.
-     *
-     * @attr ref R.styleable#BottomNavigationView_itemTextColor
-     */
-    fun getItemTextColor(): ColorStateList? {
-        return menuView.itemTextColor
-    }
-
-    /**
-     * Set the colors to use for the different states (normal, selected, focused, etc.) of the menu
-     * item text.
-     *
-     * @see getItemTextColor
-     * @attr ref R.styleable#BottomNavigationView_itemTextColor
-     */
-    fun setItemTextColor(textColor: ColorStateList?) {
-        menuView.itemTextColor = textColor
-    }
-
-    /**
-     * Returns the background resource of the menu items.
-     *
-     * @see setItemBackgroundResource
-     * @attr ref R.styleable#BottomNavigationView_itemBackground
-     */
-    @DrawableRes
-    fun getItemBackgroundResource(): Int {
-        return menuView.itemBackgroundRes
-    }
-
-    /**
-     * Set the background of our menu items to the given resource.
-     *
-     * @param resId The identifier of the resource.
-     *
-     * @attr ref R.styleable#BottomNavigationView_itemBackground
-     */
-    fun setItemBackgroundResource(@DrawableRes resId: Int) {
-        menuView.itemBackgroundRes = resId
-    }
-
-    /**
-     * Returns the currently selected menu item ID, or zero if there is no menu.
-     *
-     * @see setSelectedItemId
-     */
-    @IdRes
-    fun getSelectedItemId(): Int {
-        return menuView.selectedItemId
-    }
-
-    /**
-     * Set the selected menu item ID. This behaves the same as tapping on an item.
-     *
-     * @param itemId The menu item ID. If no item has this ID, the current selection is unchanged.
-     *
-     * @see getSelectedItemId
-     */
-    fun setSelectedItemId(@IdRes itemId: Int) {
-        menu.performIdentifierAction(itemId, 0)
-    }
-
-    /**
-     * Listener for handling selection events on bottom navigation items.
-     */
-    interface OnNavigationItemSelectedListener {
-
-        /**
-         * Called when an item in the bottom navigation menu is selected.
-         *
-         * @param item The selected item
-         *
-         * @return true to display the item as the selected item and false if the item should not
-         * be selected. Consider setting non-selectable items as disabled preemptively to
-         * make them appear non-interactive.
-         */
-        fun onNavigationItemSelected(item: MenuItem): Boolean
-    }
-
-    /**
-     * Listener for handling reselection events on bottom navigation items.
-     */
-    interface OnNavigationItemReselectedListener {
-
-        /**
-         * Called when the currently selected item in the bottom navigation menu is selected again.
-         *
-         * @param item The selected item
-         */
-        fun onNavigationItemReselected(item: MenuItem)
-    }
-
     private fun createDefaultColorStateList(baseColorThemeAttr: Int): ColorStateList? {
         val value = TypedValue()
         if (!context.theme.resolveAttribute(baseColorThemeAttr, value, true)) {
@@ -254,14 +207,14 @@ class BottomNavigationView
     override fun onSaveInstanceState(): Parcelable? {
         val parent = super.onSaveInstanceState() as Parcelable
         val saved = SavedState(parent)
-        saved.selectedItemId = getSelectedItemId()
+        saved.selectedItemId = selectedItemId
         return saved
     }
 
     override fun onRestoreInstanceState(state: Parcelable) {
         val saved = state as SavedState
         super.onRestoreInstanceState(saved.superState)
-        setSelectedItemId(saved.selectedItemId)
+        selectedItemId = saved.selectedItemId
     }
 
     private class SavedState : BaseSavedState {
