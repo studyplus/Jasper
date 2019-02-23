@@ -7,4 +7,26 @@
         <attr name="itemBackground" />
         <attr name="elevation" />
     </declare-styleable>
+
+    <!-- chart -->
+    <declare-styleable name="ChartView">
+        <attr name="text_size" format="dimension" />
+    </declare-styleable>
+    <!-- bart chart -->
+    <declare-styleable name="BarChartView">
+        <attr name="outline_width" format="dimension"/>
+        <attr name="label_margin" format="dimension"/>
+    </declare-styleable>
+    <!-- line chart -->
+    <declare-styleable name="LineChartView">
+
+    </declare-styleable>
+    <!-- pie chart -->
+    <declare-styleable name="PieChartView">
+
+    </declare-styleable>
+    <!-- radar chart -->
+    <declare-styleable name="RadarChartView">
+
+    </declare-styleable>
 </resources>

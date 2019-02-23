@@ -10,4 +10,12 @@
     <dimen name="bnv_elevation">8dp</dimen>
     <dimen name="bnv_icon_size">24dp</dimen>
     <dimen name="bnv_text_size">12sp</dimen>
+
+    <!-- chart view-->
+    <dimen name="chart_default_text_size">10sp</dimen>
+
+    <!-- bart chart view-->
+    <dimen name="bar_chart_default_outline_size">1sp</dimen>
+    <dimen name="bar_chart_default_axis_margin">4sp</dimen>
+    <dimen name="bar_chart_default_label_margin">4sp</dimen>
 </resources>
