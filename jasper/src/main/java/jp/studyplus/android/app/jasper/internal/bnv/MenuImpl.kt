@@ -23,7 +23,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.SubMenu
 
-internal class MenuImpl(
+class MenuImpl(
     val context: Context,
     val invoke: (item: MenuItem) -> Boolean
 ) : Menu {
