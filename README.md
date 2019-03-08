@@ -1,6 +1,6 @@
 # Jasper
 
-[![](https://jitpack.io/v/studyplus/Jasper.svg)](https://jitpack.io/#studyplus/Jasper)
+[![](https://jitpack.io/v/studyplus/Jasper.svg)](https://jitpack.io/#studyplus/Jasper) [![Gitter](https://badges.gitter.im/study-oss/jasper.svg)](https://gitter.im/study-oss/jasper?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 Jasper is UI components library by Studyplus Android team.
 
