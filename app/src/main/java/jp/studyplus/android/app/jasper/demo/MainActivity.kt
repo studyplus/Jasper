@@ -15,11 +15,11 @@
  */
 package jp.studyplus.android.app.jasper.demo
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.MenuItem
+import android.widget.Button
 import jp.studyplus.android.app.jasper.BottomNavigationView
-import jp.studyplus.android.app.jasper.CircleGaugeView
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,6 +35,8 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        val sampleView= findViewById<CircleGaugeView>(R.id.circle_gauge_view)
+        findViewById<Button>(R.id.open_circle_gauge_button).setOnClickListener {
+            startActivity(Intent(this@MainActivity, CircleGaugeActivity::class.java))
+        }
     }
 }
