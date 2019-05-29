@@ -99,11 +99,11 @@ class MenuImpl(
     }
 
     override fun hasVisibleItems(): Boolean {
-        return items.firstOrNull() { it.isVisible } != null
+        return items.firstOrNull { it.isVisible } != null
     }
 
     override fun findItem(id: Int): MenuItem? {
-        return items.first { it.itemId == id }
+        return items.firstOrNull { it.itemId == id }
     }
 
     override fun size(): Int {
